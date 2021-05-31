@@ -15,6 +15,10 @@ export const referredServiceOptions = [
   { name: 'Child Care' },
   { name: 'Pet Care' }
 ];
+export const radioButtonOptions1 = [
+  { name: 'Yes', value: true },
+  { name: 'No', value: false }
+];
 export const deleteMessage =
   'User has been successfully deleted from the ERA Tool.';
 export const editMessage = 'User has been edited successfully.';
@@ -36,6 +40,7 @@ export const usDefaultObject = {
   name: 'United States of America'
 };
 export const zipCodePattern = '^([0-9]{5}-[0-9]{4}|[0-9]{5})$';
+export const petsQuantityPattern = '^([1-9][0-9]{0,2})$';
 
 export const gender = [
   { name: 'Male', value: 'Male' },
@@ -50,6 +55,7 @@ export const lockedStepMessage =
   'Please complete the ESS File prior to proceeding to the next steps.';
 
 // Generic error messages
+export const genericError = 'An error has occurred. Please try again later.';
 export const teamMemberListError =
   'Unable to retrieve team members at this time. Please try again later';
 export const activateTeamMemberError =

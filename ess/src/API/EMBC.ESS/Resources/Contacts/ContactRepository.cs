@@ -43,6 +43,7 @@ namespace EMBC.ESS.Resources.Contacts
             {
                 nameof(SaveContact) => await HandleSaveContact((SaveContact)cmd),
                 nameof(DeleteContact) => await HandleDeleteContact((DeleteContact)cmd),
+                nameof(UpdateSecurityQuestions) => await HandleUpdateSecurityQuestions((UpdateSecurityQuestions)cmd),
                 _ => throw new NotSupportedException($"{cmd.GetType().Name} is not supported")
             };
         }
@@ -110,6 +111,40 @@ namespace EMBC.ESS.Resources.Contacts
             return new ContactCommandResult { ContactId = cmd.ContactId };
         }
 
+        private async Task<ContactCommandResult> HandleUpdateSecurityQuestions(UpdateSecurityQuestions cmd)
+        {
+            var contact = essContext.contacts.Where(c => c.contactid == Guid.Parse(cmd.ContactId)).SingleOrDefault();
+            if (contact != null)
+            {
+                var question1 = cmd.SecurityQuestions.Where(q => q.Id == 1).FirstOrDefault();
+                var question2 = cmd.SecurityQuestions.Where(q => q.Id == 2).FirstOrDefault();
+                var question3 = cmd.SecurityQuestions.Where(q => q.Id == 3).FirstOrDefault();
+
+                if (question1 != null)
+                {
+                    contact.era_securityquestiontext1 = question1.Question;
+                    contact.era_securityquestion1answer = question1.Answer;
+                }
+                if (question2 != null)
+                {
+                    contact.era_securityquestiontext2 = question2.Question;
+                    contact.era_securityquestion2answer = question2.Answer;
+                }
+                if (question3 != null)
+                {
+                    contact.era_securityquestiontext3 = question3.Question;
+                    contact.era_securityquestion3answer = question3.Answer;
+                }
+
+                essContext.UpdateObject(contact);
+                await essContext.SaveChangesAsync();
+            }
+
+            essContext.DetachAll();
+
+            return new ContactCommandResult { ContactId = cmd.ContactId };
+        }
+
         private async Task<ContactQueryResult> HandleQuery(ContactQuery query)
         {
             IQueryable<contact> contactQuery = essContext.contacts
@@ -128,7 +163,7 @@ namespace EMBC.ESS.Resources.Contacts
 
             essContext.DetachAll();
 
-            return new ContactQueryResult { Items = mapper.Map<IEnumerable<Contact>>(contacts) };
+            return new ContactQueryResult { Items = mapper.Map<IEnumerable<Contact>>(contacts, opt => opt.Items["MaskSecurityAnswers"] = query.MaskSecurityAnswers.ToString()) };
         }
 
         private async Task<ContactQueryResult> HandleSearchQuery(SearchContactQuery query)

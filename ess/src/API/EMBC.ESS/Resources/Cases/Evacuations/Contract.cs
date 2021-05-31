@@ -28,17 +28,7 @@ namespace EMBC.ESS.Resources.Cases.Evacuations
         Task<string> Update(EvacuationFile evacuationFile);
 
         Task<string> Delete(string essFileNumber);
-    }
 
-    public enum EvacueeType
-    {
-        Person = 174360000,
-        Pet = 174360001
-    }
-
-    public enum RegistrantType
-    {
-        Primary = 174360000,
-        Member = 174360001
+        Task<string> UpdateSecurityPhrase(string essFileNumber, string securityPhrase);
     }
 }
